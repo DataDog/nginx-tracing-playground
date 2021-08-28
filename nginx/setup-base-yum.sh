@@ -33,4 +33,8 @@ END_SOURCES
 
 yum install -y nginx
 
+# CentOS 7 needs epel-release for jq
+yum install -y epel-release
+yum update -y
+
 yum install -y wget jq tar gzip

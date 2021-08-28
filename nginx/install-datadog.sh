@@ -39,6 +39,16 @@ DD_OPENTRACING_CPP_VERSION=$(get_latest_release DataDog/dd-opentracing-cpp)
 wget -4 "https://github.com/opentracing-contrib/nginx-opentracing/releases/download/${OPENTRACING_NGINX_VERSION}/linux-amd64-nginx-${NGINX_VERSION}-ot16-ngx_http_module.so.tgz"
 tar zxf "linux-amd64-nginx-${NGINX_VERSION}-ot16-ngx_http_module.so.tgz" -C "$NGINX_MODULES_PATH"
 
+# On CentOS 7, even though the nginx modules directory is configured as being
+# /usr/lib64/nginx/modules, load_module seems to be looking in /usr/share/nginx/modules.
+# It fails with the error:
+#
+#     nginx: [emerg] dlopen() "/usr/share/nginx/modules/ngx_http_opentracing_module.so" failed (/usr/share/nginx/modules/ngx_http_opentracing_module.so: cannot open shared object file: No such file or directory) in /etc/nginx/nginx.conf:5
+#
+# I'm not sure what's going on there, so let's copy the .so to both locations.
+mkdir -p /usr/share/nginx/modules
+cp "$NGINX_MODULES_PATH"/* /usr/share/nginx/modules
+
 # Install Datadog Opentracing C++ Plugin
 wget -4 "https://github.com/DataDog/dd-opentracing-cpp/releases/download/${DD_OPENTRACING_CPP_VERSION}/linux-amd64-libdd_opentracing_plugin.so.gz"
 gunzip linux-amd64-libdd_opentracing_plugin.so.gz -c > /usr/local/lib/libdd_opentracing_plugin.so

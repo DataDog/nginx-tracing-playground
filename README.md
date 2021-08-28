@@ -66,6 +66,7 @@ More
 ### Known to Work
 The following base images have been tested using this docker-compose setup and
 are known to work:
+- `centos:7` (unexpected, but it works for this setup)
 - `centos:8`
 - `ubuntu:18.04`
 - `ubuntu:20.04`
