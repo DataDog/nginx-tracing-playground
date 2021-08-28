@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -e
+
+usage() {
+    cat - <<END_USAGE
+nginx tracing playground
+
+usage:
+    DD_API_KEY=KEY $0 IMAGE
+        Install nginx on the specified Docker base IMAGE, and bring up nginx along with
+        the Datadog agent and a downstream web server, all accessible on port
+        8080 of the host.  Use the specified KEY to authenticate the Datadog agent.
+
+    $0 --help
+    $0 -h
+        Print this message.
+END_USAGE
+}
+
+if [ $# -ne 1 ]; then
+    >&2 usage
+    exit 1
+elif [ "$1" = --help ]; then
+    usage
+    exit
+elif [ "$1" = -h ]; then
+    usage
+    exit
+fi
+
+base_image="$1"
+
+if [ -z "$DD_API_KEY" ]; then
+    >&2 echo "error: The DD_API_KEY environment variable must be set to the value of your Datadog API key."
+    exit 1
+fi
+
+repo=$(git rev-parse --show-toplevel)
+cd "$repo"
+
+docker-compose build --build-arg "BASE_IMAGE=$base_image"
+docker-compose up

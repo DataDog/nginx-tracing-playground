@@ -1,0 +1,37 @@
+version: "3.2"
+services:
+  # open source version of nginx running in the Linux of your choosing
+  traced-nginx:
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+    environment:
+      - DD_AGENT_HOST=dd-agent
+    volumes:
+      - './nginx/nginx.conf:/etc/nginx/nginx.conf:ro'
+      - './nginx/dd-config.json:/etc/nginx/dd-config.json:ro'
+      - './nginx/index.html:/usr/share/nginx/html/index.html:ro'
+    ports:
+      - "8080:80"
+
+  # latest Datadog agent
+  dd-agent:
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - '/proc/:/host/proc/:ro'
+      - '/sys/fs/cgroup/:/host/sys/fs/cgroup:ro'
+    environment:
+      - DD_API_KEY
+      - DD_APM_ENABLED=true
+    image: 'datadog/agent'
+
+  # node.js HTTP server proxied by nginx
+  downstream:
+    build:
+      context: ./downstream
+      dockerfile: ./Dockerfile
+    environment:
+      - DD_AGENT_HOST=dd-agent
+      - DD_SERVICE=test_playground_downstream
+    volumes:
+      - './downstream/downstream.js:/app/downstream.js:ro'
