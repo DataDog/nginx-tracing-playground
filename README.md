@@ -86,4 +86,4 @@ known _not_ to work:
   node.js web server, which is to be reverse proxied by nginx.
 - [nginx](nginx/) contains the definition of a docker image for a recent
   version of nginx running on a specified Linux distribution.
-- [docker-compose.yaml](docker-compose.yaml) combines the above elements.
+- [docker-compose.yml](docker-compose.yml) combines the above elements.
