@@ -68,10 +68,22 @@ The following base images have been tested using this docker-compose setup and
 are known to work:
 - `centos:8`
 - `ubuntu:18.04`
+- `ubuntu:20.04`
 - `debian:buster`
+- `debian:bullseye`
 - `opensuse/leap:15.2`
 
 ### Known to Fail
 The following base image has been tested using this docker-compose setup and is
 known _not_ to work:
-- `alpine:3`
+- `alpine:3` (see the note about glibc in [nginx/setup-apk.sh](nginx/setup-apk.sh))
+
+### Repository Layout
+- [assets/](assets/) contains images used in this readme file.
+- [bin/](bin/) contains the [run](bin/run) script, which is a wrapper around
+  docker-compose.
+- [downstream/](downstream/) contains the definition of a docker image for a
+  node.js web server, which is to be reverse proxied by nginx.
+- [nginx](nginx/) contains the definition of a docker image for a recent
+  version of nginx running on a specified Linux distribution.
+- [docker-compose.yaml](docker-compose.yaml) combines the above elements.
