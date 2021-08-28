@@ -76,7 +76,7 @@ are known to work:
 ### Known to Fail
 The following base image has been tested using this docker-compose setup and is
 known _not_ to work:
-- `alpine:3` (see the note about glibc in [nginx/setup-apk.sh](nginx/setup-apk.sh))
+- `alpine:3` (see the note about glibc in [nginx/setup-base-apk.sh](nginx/setup-base-apk.sh))
 
 ### Repository Layout
 - [assets/](assets/) contains images used in this readme file.
