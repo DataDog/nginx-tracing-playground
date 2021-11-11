@@ -1,16 +1,12 @@
 #!/bin/sh
 
 set -e
+set -x
 
-# Install nginx on either RHEL or CentOS, and then install the
-# nginx-opentracing module and its datadog plugin.
-
-# This is based on the "RHEL/CentOS" section of:
-# <https://nginx.org/en/linux_packages.html#instructions>.
-
+yum update -y
 yum install -y yum-utils
 
->/etc/yum.repos.d/nginx.repo cat <<'END_SOURCES'
+>/etc/yum.repos.d/nginx.repo cat <<'END_CONFIG'
 [nginx-stable]
 name=nginx stable repo
 baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
@@ -26,15 +22,19 @@ gpgcheck=1
 enabled=0
 gpgkey=https://nginx.org/keys/nginx_signing.key
 module_hotfixes=true
-END_SOURCES
+END_CONFIG
 
-# If using mainline instead of stable, uncomment the following line:
-# yum-config-manager --enable nginx-mainline
+yum update -y
 
-yum install -y nginx
+# These are different builds of nginx...
+# yum module reset nginx
+# yum module enable -y nginx:1.18
+# yum install -y nginx
 
 # CentOS 7 needs epel-release for jq
-yum install -y epel-release
-yum update -y
+# yum install -y epel-release
+# yum update -y
+
+yum install -y nginx-1:1.18.0-2.el8.ngx
 
 yum install -y wget jq tar gzip

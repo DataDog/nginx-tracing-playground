@@ -32,8 +32,18 @@ get_nginx_modules_path() {
 
 NGINX_VERSION=$(get_nginx_version)
 NGINX_MODULES_PATH=$(get_nginx_modules_path)
-OPENTRACING_NGINX_VERSION=$(get_latest_release opentracing-contrib/nginx-opentracing)
+# OPENTRACING_NGINX_VERSION=$(get_latest_release opentracing-contrib/nginx-opentracing)
+OPENTRACING_NGINX_VERSION=v0.20.0
 DD_OPENTRACING_CPP_VERSION=$(get_latest_release DataDog/dd-opentracing-cpp)
+
+cat <<END_LOGGING
+NGINX_VERSION: $NGINX_VERSION
+NGINX_MODULES_PATH: $NGINX_MODULES_PATH
+OPENTRACING_NGINX_VERSION: $OPENTRACING_NGINX_VERSION
+DD_OPENTRACING_CPP_VERSION: $DD_OPENTRACING_CPP_VERSION
+"nginx -V" follows:
+$(nginx -V 2>&1)
+END_LOGGING
 
 # Install NGINX plugin for OpenTracing
 wget -4 "https://github.com/opentracing-contrib/nginx-opentracing/releases/download/${OPENTRACING_NGINX_VERSION}/linux-amd64-nginx-${NGINX_VERSION}-ot16-ngx_http_module.so.tgz"

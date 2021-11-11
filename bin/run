@@ -40,4 +40,6 @@ repo=$(git rev-parse --show-toplevel)
 cd "$repo"
 
 docker-compose build --build-arg "BASE_IMAGE=$base_image"
-docker-compose up
+docker-compose up --detach --remove-orphans
+trap 'docker-compose down; trap - EXIT; exit' EXIT INT HUP
+docker-compose logs --follow traced-nginx downstream
